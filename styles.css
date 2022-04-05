@@ -14,3 +14,11 @@ li{
     font-size: x-small;
     margin: 5px;
 }
+
+#contenaire{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 30px;
+    flex-direction: column;
+}
