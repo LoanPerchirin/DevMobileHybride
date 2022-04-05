@@ -1,3 +1,8 @@
+let indice = 0;
+let i = 0;
+while (localStorage.getItem("objet"+i) != null) {
+    i++;
+}
 
 class Savoir{
     constructor(savoir, auteur, date){
@@ -5,73 +10,117 @@ class Savoir{
         this.auteur = auteur;
         this.date = date;
     }
+    //methode pour avouter dans le dom
+    ajouterDansleDom(){
+
+        if(this.auteur === "" || this.savoir === "" || this.auteur === "auteur"|| this.savoir === "savoir"|| this.date === ""){
+
+        } else {
+            let nouv = new Savoir(this.savoir, this.auteur, this.date);
+
+            console.log(allSavoir);
+
+            // si format date .valueAsDate
+            let elrendu = document.createElement("li");
+            let id = indice;
+            elrendu.setAttribute("id", "rendu" + indice);
+
+            let elbuttondelete = document.createElement("button");
+            elbuttondelete.innerHTML = "Suprimer";
+            elbuttondelete.setAttribute("id", "bu" + indice);
+            elbuttondelete.setAttribute("onclick", "deleter(" + id + ");");
+
+            //on rajoute le contenue
+            elrendu.innerHTML = this.savoir + "<br>" + " de : " + this.auteur + "<br>" + " le : " + this.date;
+            document.getElementById("liste").appendChild(elrendu);
+            //document.getElementById("titre").insertAdjacentElement("afterend", elrendu);
+            document.getElementById("rendu" + indice).insertAdjacentElement("afterend", elbuttondelete);
+            indice++;
+        }
+    }
+    ajouterDansleLocal() {
+        let auteur = document.getElementById("auteur").value;
+        let savoir = document.getElementById("savoir").value;
+        let dates = document.getElementById("date").value;
+        let objet = {auteur: `${auteur}`,savoir: `${savoir}`, date: `${dates}`};
+        localStorage.setItem("objet"+i++,JSON.stringify(objet));
+        let objetLu = localStorage.getItem("objet");
+        let objetobjetLu = JSON.parse(objetLu);
+        console.log(objetobjetLu);
+    }
 }
 
+let allSavoir =[];
+while (localStorage.getItem("objet"+i)!=null) {
+    i++;
+    let nouv1 = localStorage.getItem("objet"+i);
+    let nouv2 = JSON.parse(nouv1);
+    console.log(nouv2);
+    let nouv = new Savoir(nouv2.savoir, nouv2.auteur, nouv2.date);
+    nouv.ajouterDansleDom();
+    allSavoir.push(nouv);
+    nouv.ajouterDansleLocal();
+}
+    function chargerContenu() {
+        console.log("coucou, la fonction chargerContenu() est exécutée");
+
+        document.title = "Mon titre sur l'onglet";
 
 
-function ajouter()
-{
-    console.log("Bouton cliqué");
+        //document.getElementsByTagName("h1")[0].innerText = "Ceci est mon vrai titre";
+        document.getElementById("titre").innerText = "Ceci est vraiment le bon titre";
 
-    // 1. Récupération valeur du input de savoir
-    let elSavoir = document.getElementById("libelleSavoir").value;
-    // 1. Récupération valeur du input de auteur
-    let elAuteur = document.getElementById("libelleAuteur").value;
-    // 1. Récupération valeur du input de auteur
-    let elDate = document.getElementById("date").valueAsDate;
+        let elInput = document.createElement("input");
+        let attValue = document.createAttribute("value");
+        attValue.value = "une zone de saisie";
+        elInput.setAttributeNode(attValue);
+        elInput.setAttribute("value", "auteur");
+        elInput.setAttribute("id", "auteur");
 
-    // Vérification de la saisie
-    if ( verifSaisie (elSavoir ,elAuteur, elDate ) )
-    {
-        // 2. Préparation de ce qu'on va afficher dans le DOM
-        let newElementLi = document.createElement("li");
-        let newElementP = document.createElement("p");
-        let newElementP2 = document.createElement("p");
-        let newElementButton = document.createElement("button");
+        let elInput2 = document.createElement("input");
+        let attValue2 = document.createAttribute("value");
+        attValue2.value = "une zone de saisie";
+        elInput2.setAttributeNode(attValue2);
+        elInput2.setAttribute("value", "savoir");
+        elInput2.setAttribute("id", "savoir");
 
-        // Paragraphe du savoir inutile
-        newElementP.innerText = elSavoir;
+        let elInput3 = document.createElement("input");
+        let attValue3 = document.createAttribute("value");
+        elInput3.setAttributeNode(attValue3);
+        elInput3.setAttribute("value", "04/04/22");
+        elInput3.setAttribute("id", "date");
 
-        // Eclatement de la date
-        var jour = elDate.getDate().toString().padStart(2, "0");
-        var mois = (elDate.getMonth() + 1).toString().padStart(2, "0");
-        var annee = elDate.getFullYear();
-
-        newElementP2.innerText = `Par ${elAuteur}, le ${jour}/${mois}/${annee}`;
-
-        // Insérer le P dans le LI
-        newElementLi.appendChild( newElementP );
-        newElementLi.appendChild( newElementP2 );
-        // Insérer le Button dans le LI
-        newElementLi.appendChild( newElementButton );
+        let elbutton = document.createElement("button");
+        let attValueB = document.createAttribute("innerHTML");
+        attValueB.value = "Ajouter";
+        elbutton.setAttributeNode(attValueB);
+        elbutton.innerHTML = "Ajouter";
+        elbutton.setAttribute("onclick", "addlist();");
 
 
-
-        // Ajouter un événement à cet élément LI
-        newElementButton.addEventListener("click", supprimer);
-        newElementButton.innerText = "Supprimer";
-
-
-        // 3. Ajoute l'élément de liste au DOM
-        let elementOl = document.getElementById("olListeSavoir");
-        elementOl.appendChild( newElementLi );
-    }else{
-        alert("Il faut tout saisir!")
+        //afterend, beforebegin, afterbegin, beforerend
+        document.getElementById("titre").insertAdjacentElement("afterend", elInput);
+        document.getElementById("titre").insertAdjacentElement("afterend", elInput2);
+        document.getElementById("titre").insertAdjacentElement("afterend", elInput3);
+        document.getElementById("titre").insertAdjacentElement("afterend", elbutton);
     }
 
-    console.log("Savoir :" + elSavoir);
-}
+    function addlist() {
+        let auteur = document.getElementById("auteur").value;
+        let savoir = document.getElementById("savoir").value;
+        let date = document.getElementById("date").value;
+        if(auteur === "" || savoir === "" || auteur === "auteur"|| savoir === "savoir"|| date === ""){
 
-function supprimer( event )
-{
-    console.log(" Vous avez cliqué sur: ");
-    console.log( event.currentTarget );
+        } else {
+            let nouv = new Savoir(savoir, auteur, date);
+            nouv.ajouterDansleDom();
+            allSavoir.push(nouv);
+            nouv.ajouterDansleLocal();
+        }
 
-    console.log(" Le parent: ");
-    console.log( event.currentTarget.parentNode );
-    event.currentTarget.parentNode.parentNode.removeChild( event.currentTarget.parentNode )
-}
-
-function verifSaisie( savoir, auteur, dateSaisie) {
-    return savoir != "" && auteur != "" && dateSaisie != null;
-}
+    }
+    function deleter(id) {
+        console.log("rendu"+id);
+        document.getElementById("rendu"+id).remove();
+        document.getElementById("bu"+id).remove();
+    }
